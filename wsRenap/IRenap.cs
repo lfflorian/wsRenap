@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
+using System.Xml.Linq;
 
 namespace wsRenap
 {
@@ -12,15 +13,15 @@ namespace wsRenap
     public interface IRenap
     {
         [OperationContract]
-        void TieneArraigo(string dpi);
+        string TieneArraigo(string dpi);
 
         [OperationContract]
-        void EsMayorDeEdad(string dpi);
+        string EsMayorDeEdad(string dpi);
 
         [OperationContract]
-        void EstadoPersona(string dpi);
+        string EstadoPersona(string dpi);
 
         [OperationContract]
-        void VigenciaDeDPI(string dpi);
+        string VigenciaDeDPI(string dpi);
     }
 }
