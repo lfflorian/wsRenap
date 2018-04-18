@@ -17,6 +17,7 @@ namespace wsRenap
         
         public void EsMayorDeEdad(string dpi)
         {
+
             throw new NotImplementedException();
         }
         
