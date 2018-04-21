@@ -18,30 +18,38 @@ namespace wsRenap
             dbContext = new RenapEntities1();
         }
 
-        public string EsMayorDeEdad(string dpi)
+        public Persona BuscarPersona(string dpi)
         {
-            int iDpi = Int32.Parse(dpi);
-            Persona hola = new Persona();
+            Persona persona = new Persona();
+            Documento documento = new Documento();
+
             try
             {
                 using (dbContext)
                 {
-                    hola = dbContext.Personas.First(i => i.IdDocumento == iDpi);
+                    documento = dbContext.Documentoes.First(d => d.numeroDPI == dpi);
+                    persona = dbContext.Personas.First(i => i.IdDocumento == documento.IdDocumento);
                 }
             }
             catch (Exception es)
             {
-
-                return "No encontrado";
+                //return "No encontrado";
             }
-            
-            var fechaResultado = DateTime.Now - hola.FechaNacimiento;
+
+            return persona;
+        }
+
+        public string EsMayorDeEdad(string dpi)
+        {
+            Persona persona = BuscarPersona(dpi);
+
+            var fechaResultado = DateTime.Now - persona.FechaNacimiento;
             var edad = fechaResultado.Value.Days / 365;
             var mayordeEdad = (edad >= 18) ? "si" : "no";
 
             XElement Respuesta = new XElement("Respuesta",
-                    new XElement("Nombre", hola.Nombre),
-                    new XElement("FechaNacimiento", hola.FechaNacimiento),
+                    new XElement("Nombre", persona.Nombre),
+                    new XElement("FechaNacimiento", persona.FechaNacimiento),
                     new XElement("Edad", edad.ToString()),
                     new XElement("MayordeEdad", mayordeEdad)
                 );
@@ -51,17 +59,41 @@ namespace wsRenap
 
         public string EstadoPersona(string dpi)
         {
-            throw new NotImplementedException();
+            Persona persona = BuscarPersona(dpi);
+            if (persona.FechaDeceso != null)
+            {
+                return "Esta muerto";
+            } else
+            {
+                return "Esta Vivo";
+            }
         }
 
         public string TieneArraigo(string dpi)
         {
-            throw new NotImplementedException();
+            Persona persona = BuscarPersona(dpi);
+
+            if (persona.PensiónAlimenticia == null)
+            {
+                return "No tiene pension";
+            } else
+            {
+                return "Tiene pension";
+            }
         }
 
         public string VigenciaDeDPI(string dpi)
         {
-            throw new NotImplementedException();
+            Documento documento = new Documento();
+            documento = dbContext.Documentoes.First(d => d.numeroDPI == dpi);
+
+            if (documento.fechaVencimiento < DateTime.Now)
+            {
+                return "Vencido";
+            } else
+            {
+                return "Vigente";
+            }
         }
     }
 }
