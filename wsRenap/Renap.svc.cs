@@ -22,16 +22,14 @@ namespace wsRenap
         {
             int iDpi = Int32.Parse(dpi);
             Persona hola = new Persona();
-            RenapEntities1 ren = new RenapEntities1();
-
             try
             {
-                using (ren)
+                using (dbContext)
                 {
-                    hola = ren.Personas.First(i => i.IdDocumento == iDpi);
+                    hola = dbContext.Personas.First(i => i.IdDocumento == iDpi);
                 }
             }
-            catch (Exception)
+            catch (Exception es)
             {
 
                 return "No encontrado";
